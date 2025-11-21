@@ -2,9 +2,9 @@
 // @id             iitc-plugin-portalcode-YokohamaBB
 // @name           IITC Plugin: Portal Code Viewer (Yokohama + search)
 // @category       Layer
-// @version        0.1.0.202511211400
+// @version        0.2.0.202511211400
 // @namespace      iitc-plugin-portalcode-YokohamaBB
-// @description    ‰¡•lBB—pƒ|[ƒ^ƒ‹ƒR[ƒhB•W€ŒŸõƒ{ƒbƒNƒX‚©‚çƒR[ƒhŒŸõ‰Â”\BCSS from otusscops
+// @description    æ¨ªæµœBBç”¨ãƒãƒ¼ã‚¿ãƒ«ã‚³ãƒ¼ãƒ‰ã€‚æ¨™æº–æ¤œç´¢ãƒœãƒƒã‚¯ã‚¹ã‹ã‚‰ã‚³ãƒ¼ãƒ‰æ¤œç´¢å¯èƒ½ã€‚
 // @include        https://*.ingress.com/*
 // @include        http://*.ingress.com/*
 // @match          https://*.ingress.com/*
@@ -35,7 +35,7 @@
     /** @type {L.CircleMarker|null} */
     self.searchMarker = null;
 
-    // ====== ƒ|[ƒ^ƒ‹ƒR[ƒhƒŠƒXƒgilat,lng”Åj ======
+    // ====== ãƒãƒ¼ã‚¿ãƒ«ã‚³ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆï¼ˆlat,lngç‰ˆï¼‰ ======
     // [lat, lng, "code"]
     const PORTAL_DATA = [
       [35.447078, 139.637661, "A01"],
@@ -176,26 +176,26 @@
           let type;
 
           if (first === "A" || first === "B" || first === "C") {
-            // —ÎF
+            // ç·‘è‰²
             className = "portal-code-red";
             layerGroup = self.layerABC;
             type = "ABC";
             countABC++;
           } else if (first === "X") {
-            // ŠDF
+            // ç°è‰²
             className = "portal-code-gray";
             layerGroup = self.layerX;
             type = "X";
             countX++;
           } else {
-            return; // ‘ÎÛŠO
+            return; // å¯¾è±¡å¤–
           }
 
           if (!layerGroup) return;
 
           self.addPortalMarker(lat, lng, code, className, layerGroup);
 
-          // ŒŸõ—p
+          // æ¤œç´¢ç”¨
           self.portalDataMap.set(code.toLowerCase(), {
             lat,
             lng,
@@ -213,7 +213,7 @@
     };
 
     /**
-     * ŒŸõƒnƒCƒ‰ƒCƒg‚ğÁ‹
+     * æ¤œç´¢ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚’æ¶ˆå»
      */
     self.clearSearchHighlight = function () {
       if (self.searchMarker) {
@@ -223,8 +223,8 @@
     };
 
     /**
-     * IITC•W€ŒŸõƒ{ƒbƒNƒX‚Ìƒnƒ“ƒhƒ‰
-     * ƒR[ƒhi—á: A01, b12, x03j‚ÅŒŸõ
+     * IITCæ¨™æº–æ¤œç´¢ãƒœãƒƒã‚¯ã‚¹ã®ãƒãƒ³ãƒ‰ãƒ©
+     * ã‚³ãƒ¼ãƒ‰ï¼ˆä¾‹: A01, b12, x03ï¼‰ã§æ¤œç´¢
      * @param {{term:string, addResult:function}} query
      */
     self.handleSearch = function (query) {
@@ -258,7 +258,7 @@
     };
 
     /**
-     * ƒvƒ‰ƒOƒCƒ“‹N“®
+     * ãƒ—ãƒ©ã‚°ã‚¤ãƒ³èµ·å‹•
      */
     self.start = function () {
       self.layerABC = new L.FeatureGroup();
@@ -275,11 +275,11 @@
   pointer-events: none;
   text-align: center;
 }
-/* ƒoƒgƒ‹ƒGƒŠƒA */
+/* ãƒãƒˆãƒ«ã‚¨ãƒªã‚¢ */
 .portal-code-red {
   color: #00ff7f;
 }
-/* ƒoƒgƒ‹ƒGƒŠƒAŠO•â‹‹ƒ|[ƒ^ƒ‹ */
+/* ãƒãƒˆãƒ«ã‚¨ãƒªã‚¢å¤–è£œçµ¦ãƒãƒ¼ã‚¿ãƒ« */
 .portal-code-gray {
   color: #AAAAAA;
 }
@@ -289,15 +289,15 @@
       styleTag.innerHTML = cssData;
       document.getElementsByTagName("head")[0].appendChild(styleTag);
 
-      // ƒ|[ƒ^ƒ‹•`‰æi”ñ“¯Šú‚ÅŠJnj
+      // ãƒãƒ¼ã‚¿ãƒ«æç”»ï¼ˆéåŒæœŸã§é–‹å§‹ï¼‰
       setTimeout(self.plotPortals, 0);
 
-      // ŒŸõƒtƒbƒN
+      // æ¤œç´¢ãƒ•ãƒƒã‚¯
       window.addHook("search", self.handleSearch);
-      // ƒ}ƒbƒvƒNƒŠƒbƒN‚ÅƒnƒCƒ‰ƒCƒgÁ‹
+      // ãƒãƒƒãƒ—ã‚¯ãƒªãƒƒã‚¯ã§ãƒã‚¤ãƒ©ã‚¤ãƒˆæ¶ˆå»
       window.map.on("click", self.clearSearchHighlight);
 
-      // ƒŒƒCƒ„[“o˜^iƒfƒtƒHƒ‹ƒgONj
+      // ãƒ¬ã‚¤ãƒ¤ãƒ¼ç™»éŒ²ï¼ˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆONï¼‰
       window.addLayerGroup("Portal Codes ABC (green text)", self.layerABC, true);
       window.addLayerGroup("Portal Codes X (gray text)", self.layerX, true);
     };
