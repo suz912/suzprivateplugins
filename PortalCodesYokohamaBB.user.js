@@ -2,7 +2,7 @@
 // @id             iitc-plugin-portalcode-YokohamaBB
 // @name           IITC Plugin: Portal Code Viewer (Yokohama + search)
 // @category       Layer
-// @version        0.2.0.202511211400
+// @version        0.2.1.202511211500
 // @namespace      iitc-plugin-portalcode-YokohamaBB
 // @description    横浜BB用ポータルコード。標準検索ボックスからコード検索可能。
 // @include        https://*.ingress.com/*
@@ -34,6 +34,12 @@
     self.portalDataMap = new Map();
     /** @type {L.CircleMarker|null} */
     self.searchMarker = null;
+
+    // ★ 青にするポータルコード
+    const BLUE_CODES = new Set([
+      "a27","a28","a29","a30","a31","a32","a33",
+      "b27","b28","b29","b30","b31","b32","b33","b34",
+    ]);
 
     // ====== ポータルコードリスト（lat,lng版） ======
     // [lat, lng, "code"]
@@ -170,23 +176,28 @@
           const [lat, lng, code] = data;
           if (typeof lat !== "number" || typeof lng !== "number" || typeof code !== "string") return;
 
-          const first = code.charAt(0).toUpperCase();
+          const key = code.toLowerCase();
+          const first = key.charAt(0);
+
           let className;
           let layerGroup;
           let type;
 
-          if (first === "A" || first === "B" || first === "C") {
-            // 緑色
-            className = "portal-code-red";
-            layerGroup = self.layerABC;
-            type = "ABC";
-            countABC++;
-          } else if (first === "X") {
-            // 灰色
+          if (first === "x") {
             className = "portal-code-gray";
             layerGroup = self.layerX;
             type = "X";
             countX++;
+          } else if (first === "a" || first === "b" || first === "c") {
+            // ★ 青指定コードかどうか
+            if (BLUE_CODES.has(key)) {
+              className = "portal-code-orange"; // 青系
+            } else {
+              className = "portal-code-red";    // 緑系
+            }
+            layerGroup = self.layerABC;
+            type = "ABC";
+            countABC++;
           } else {
             return; // 対象外
           }
@@ -196,7 +207,7 @@
           self.addPortalMarker(lat, lng, code, className, layerGroup);
 
           // 検索用
-          self.portalDataMap.set(code.toLowerCase(), {
+          self.portalDataMap.set(key, {
             lat,
             lng,
             type,
@@ -224,8 +235,6 @@
 
     /**
      * IITC標準検索ボックスのハンドラ
-     * コード（例: A01, b12, x03）で検索
-     * @param {{term:string, addResult:function}} query
      */
     self.handleSearch = function (query) {
       const term = query.term.trim().toLowerCase();
@@ -264,9 +273,8 @@
       self.layerABC = new L.FeatureGroup();
       self.layerX = new L.FeatureGroup();
 
-      // CSS
+      // CSS（元プラグインスタイル＋青を追加）
       const cssData = `
-/* CSS */
 .portal-code-marker {
   font-size: 11px;
   font-weight: bold;
@@ -275,11 +283,15 @@
   pointer-events: none;
   text-align: center;
 }
-/* バトルエリア */
+/* 通常ABC（緑） */
 .portal-code-red {
   color: #00ff7f;
 }
-/* バトルエリア外補給ポータル */
+/* 青にしたい特定コード用 */
+.portal-code-orange {
+  color: #87cefa;
+}
+/* Xコード（灰） */
 .portal-code-gray {
   color: #AAAAAA;
 }
@@ -298,7 +310,7 @@
       window.map.on("click", self.clearSearchHighlight);
 
       // レイヤー登録（デフォルトON）
-      window.addLayerGroup("Portal Codes ABC (green text)", self.layerABC, true);
+      window.addLayerGroup("Portal Codes ABC (green/blue text)", self.layerABC, true);
       window.addLayerGroup("Portal Codes X (gray text)", self.layerX, true);
     };
 
