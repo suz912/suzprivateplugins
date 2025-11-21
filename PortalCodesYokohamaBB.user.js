@@ -35,7 +35,7 @@
     /** @type {L.CircleMarker|null} */
     self.searchMarker = null;
 
-    // ★ 青にするポータルコード
+    // ★ 内郭ポータルコード
     const BLUE_CODES = new Set([
       "a27","a28","a29","a30","a31","a32","a33",
       "b27","b28","b29","b30","b31","b32","b33","b34",
@@ -189,7 +189,7 @@
             type = "X";
             countX++;
           } else if (first === "a" || first === "b" || first === "c") {
-            // ★ 青指定コードかどうか
+            // ★ 指定コードかどうか
             if (BLUE_CODES.has(key)) {
               className = "portal-code-orange"; // 青系
             } else {
@@ -273,7 +273,7 @@
       self.layerABC = new L.FeatureGroup();
       self.layerX = new L.FeatureGroup();
 
-      // CSS（元プラグインスタイル＋青を追加）
+      // CSS
       const cssData = `
 .portal-code-marker {
   font-size: 11px;
@@ -287,7 +287,7 @@
 .portal-code-red {
   color: #00ff7f;
 }
-/* 青にしたい特定コード用 */
+/* 特定コード用 */
 .portal-code-orange {
   color: #87cefa;
 }
@@ -340,3 +340,4 @@
     script,
   );
 })();
+
